@@ -64,3 +64,32 @@ app.post('/agents/*', eve.incomingFromExpress);
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
+
+
+
+// generating event messages in lieu of the esb service for testing purposes
+var randgen = require('randgen');
+var jobTimes = {Ludo:20, Giovanni:30, Remco:40};
+
+function generateNewJob(worker) {
+	console.log("new job for " + worker);
+	//TODO send message to right worker for job start	
+
+	//take a random number from a distribution centered around jobTimes[worker]
+	var realTime = randgen.rnorm(jobTimes[worker], 10);
+	if (realTime < 2) realTime = 2; // making sure we dont have negative or ultrashort times
+	console.log(realTime);
+
+	setTimeout(function() {
+		//TODO send event		
+		console.log("task finished for " + worker);
+		setTimeout(function() { generateNewJob(worker); }, 2000); // and send the worker a new job
+	}, realTime * 1000);
+
+}
+
+generateNewJob("Remco");
+generateNewJob("Giovanni");
+generateNewJob("Ludo");
+
+
