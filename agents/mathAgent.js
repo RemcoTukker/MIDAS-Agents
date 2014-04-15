@@ -5,8 +5,15 @@ myAgent.init = function() {
 	
 	this.registerAddressForRPCs('http', "agents/" + this.agentName);  
 
+	var that = this;
+	//setTimeout(function() { 
+		that.learningModule = that.getModule('EveModule'); 
+		that.learningModule.WriteInfrared(10);
+
+	//} , 1000);
+	
 	// no further init necessary
-	console.log("mathAgent added");
+	console.log("mathAgent added111");
 }
 
 myAgent.RPCfunctions.add = function (params, callback) {

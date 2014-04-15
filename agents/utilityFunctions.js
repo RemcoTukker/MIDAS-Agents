@@ -14,6 +14,10 @@ function utilities(newAgent, agentName, filename, options, serviceFunctions ) {
 				// make sure we have our own RPCfunctions object, in case we dynamically want to add functions, 
 					//for example with closure of our own agent (such as in the init function)
 
+		newAgent.getModule = function(name) {
+			return serviceFunctions.getModule(name);
+		}
+
 		//this.send = send;
 		newAgent.send = function(destination, message, callback) {
 			serviceFunctions.send(destination, message, callback);

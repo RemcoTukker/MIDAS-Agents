@@ -1,4 +1,10 @@
 
+/*
+TODO: 
+Make loading of services and agents from arbitrary locations possible in a sane way
+
+*/
+
 /**
  * Module dependencies.
  */
@@ -31,10 +37,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 // 
 var eveOptions = {
 	services: { topics: {}, evep2p: {transports: {localTransport: {}, httpRequest: {} } } }, // httpRequest 
-	agents: {filename: "mathAgent.js" }
+	//agents: {filename: "mathAgent.js" }
+	agents: {}  //currently agents at startup can only be loaded from the eve/agents directory... TODO: fix that!
 } 
+
 var eve = new Eve(eveOptions);
 
+// add our own custom learning modules service to eve
+var LearningService = require('./learningmodules/learning');
+eve.addService(LearningService, {}, 'learning');
+
+var MathAgent = require('./agents/mathAgent');
+eve.addAgent(MathAgent, 'mathAgent/0', 'agents/mathAgent.js', {});
 
 
 // development only
