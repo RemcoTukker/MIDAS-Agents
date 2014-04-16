@@ -47,8 +47,14 @@ var eve = new Eve(eveOptions);
 var LearningService = require('./learningmodules/learning');
 eve.addService(LearningService, {}, 'learning');
 
-var MathAgent = require('./agents/mathAgent');
-eve.addAgent(MathAgent, 'mathAgent/0', 'agents/mathAgent.js', {});
+var ProxyAgent = require('./agents/esbProxyAgent');
+eve.addAgent(ProxyAgent, 'esbProxy', 'agents/esbProxypAgent.js', {});
+
+var WorkerAgent = require('./agents/workerAgent');
+eve.addAgent(WorkerAgent, 'Remco', 'agents/workerAgent.js', {});
+eve.addAgent(WorkerAgent, 'Ludo', 'agents/workerAgent.js', {});
+eve.addAgent(WorkerAgent, 'Giovanni', 'agents/workerAgent.js', {});
+
 
 
 // development only
@@ -67,13 +73,18 @@ http.createServer(app).listen(app.get('port'), function(){
 
 
 
+///////////////         testing code
+
 // generating event messages in lieu of the esb service for testing purposes
 var randgen = require('randgen');
 var jobTimes = {Ludo:20, Giovanni:30, Remco:40};
 
 function generateNewJob(worker) {
 	console.log("new job for " + worker);
-	//TODO send message to right worker for job start	
+	var date = new Date();
+	var message = {id:0, method:"routeEvent", params:{worker:worker, type: "jobStarted", timestamp: date.getTime() }};
+	//send event to esbproxy agent
+	eve.useServiceFunction("send", "local://esbProxy", message, function(answer){ console.log(answer); }); 
 
 	//take a random number from a distribution centered around jobTimes[worker]
 	var realTime = randgen.rnorm(jobTimes[worker], 10);
@@ -81,7 +92,11 @@ function generateNewJob(worker) {
 	console.log(realTime);
 
 	setTimeout(function() {
-		//TODO send event		
+		var date2 = new Date();
+		var message2 = {id:0, method:"routeEvent", params:{worker:worker, type: "jobFinished", timestamp: date2.getTime() }};
+		//send event to esbproxy agent
+		eve.useServiceFunction("send", "local://esbProxy", message2, function(answer){ console.log(answer); }); 
+
 		console.log("task finished for " + worker);
 		setTimeout(function() { generateNewJob(worker); }, 2000); // and send the worker a new job
 	}, realTime * 1000);
