@@ -26,6 +26,9 @@ function Learning(eve, options, addServiceFunction) {
 	var nodeModule = require('./EveModule/EveModule');
 	modules['EveModule'] = {ctor: nodeModule.EveModule, count: 0};
 
+	var nodeModule2 = require('./MeanAndVarianceModule');
+	modules['MeanAndVarianceModule'] = {ctor: nodeModule2.MeanAndVarianceModule, count: 0};
+
 	//var obj = modules['EveModule'].ctor("0");
 	
 	//console.log('learning module loaded')

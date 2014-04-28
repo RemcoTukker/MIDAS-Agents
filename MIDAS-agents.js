@@ -87,7 +87,7 @@ function generateNewJob(worker) {
 	eve.useServiceFunction("send", "local://esbProxy", message, function(answer){ console.log(answer); }); 
 
 	//take a random number from a distribution centered around jobTimes[worker]
-	var realTime = randgen.rnorm(jobTimes[worker], 10);
+	var realTime = randgen.rnorm(jobTimes[worker ], 10);
 	if (realTime < 2) realTime = 2; // making sure we dont have negative or ultrashort times
 	console.log(realTime);
 
@@ -106,5 +106,4 @@ function generateNewJob(worker) {
 generateNewJob("Remco");
 generateNewJob("Giovanni");
 generateNewJob("Ludo");
-
 

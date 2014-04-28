@@ -25,16 +25,22 @@ myAgent.init = function() {
 
 	this.registerAddressForRPCs('http', "agents/" + this.agentName);  
 
-	this.learningModule = this.getModule('EveModule');
+	this.learningModule = this.getModule('MeanAndVarianceModule');
 
-	//TODO register callback for incoming messages from module and setting the expected, min and maxTime variables
 	var that = this;
-	this.learningModule.RegReadLeftWheel(function(msg) {
-		//
-		//that.expectedTime = msg;
+	this.learningModule.RegReadMean(function(mean){
+		that.expectedTime = mean;
+		console.log("settting mean for " + that.agentName + " to: " + mean);
 	});
-	//etc	
 
+	this.learningModule.RegReadVariance(function(variance){
+		if (variance > 0) {
+			that.minTime = that.expectedTime - Math.sqrt(variance);
+			that.maxTime = that.expectedTime + 2 * Math.sqrt(variance);
+			console.log("settting min/max for " + that.agentName + " to: " + that.minTime + " / " + that.maxTime);
+
+		}
+	});
 
 	// no further init necessary
 	console.log("worker Agent (Remco) added");
@@ -118,8 +124,8 @@ myAgent.RPCfunctions.processEvent = function(params, callback) {
 		}
 		
 
-		//TODO let the learning modules know something happened
-		//this.learningModule.WriteInfrared(duration / 1000);
+		// let the learning modules know something happened
+		this.learningModule.WriteDuration(duration / 1000); // in seconds
 
 		clearTimeout(this.timeout); // remove timeout
 		this.startTime = null; // remove startTime
