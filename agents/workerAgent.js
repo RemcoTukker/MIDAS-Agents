@@ -35,7 +35,7 @@ myAgent.init = function() { // this is stuff that is specific to the agent
 
 	this.learningModule.RegReadVariance(function(variance){
 		if (variance > 0) {
-			that.minTime = that.expectedTime - Math.sqrt(variance);
+			that.minTime = that.expectedTime - 1.3 * Math.sqrt(variance);
 			that.maxTime = that.expectedTime + 2 * Math.sqrt(variance);
 			console.log("settting min/max for " + that.agentName + " to: " + that.minTime + " / " + that.maxTime);
 
@@ -127,7 +127,9 @@ myAgent.RPCfunctions.processEvent = function(params, callback) {
 		if (this.timeline.length > 100) {
 			this.timeline.shift(); //just remove first element
 		}
-
+		// make sure that timelineId doesnt become too big
+		if (this.timelineId > 100000) this.timelineId = 0;
+		
 
 		// let the learning modules know something happened
 		this.learningModule.WriteDuration(duration / 1000); // in seconds
@@ -147,6 +149,9 @@ myAgent.RPCfunctions.getHistory = function(params, callback) {
 };
 
 myAgent.RPCfunctions.reset = function(params, callback) {
+    
+	//TODO this doesnt work, because we still have the old AIM module where the data resides.. 
+	//have to make a reset function in there too then
 
 	this.expectedTime = null;
 	this.minTime = null;

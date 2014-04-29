@@ -8,8 +8,11 @@ html
         title.
             Agent GUI Demo
         link(href="../../stylesheets/style.css", rel='stylesheet', type="text/css")
-        script(type='text/javascript', src='../../javascripts/vis.min.js')
         link(href="../../stylesheets/vis.css", rel='stylesheet', type="text/css")
+        link(href="../../stylesheets/d3.css", rel='stylesheet', type="text/css")
+
+        script(type='text/javascript', src='../../javascripts/d3.v3.min.js')
+        script(type='text/javascript', src='../../javascripts/vis.min.js')
         script(type='text/javascript', src='../../javascripts/gui.js')
 
     body
@@ -20,10 +23,9 @@ html
             span(id='agentStatusSpan').
                 Agent status: connecting..
         div(id="agentControls")
-            h2.
-                Controls
             span(id='commandStatus')
-
+        div(id="histogramButton")
+        div(id="histogram")
         div(id="visualization")
-
+            h2. Timeline
 
