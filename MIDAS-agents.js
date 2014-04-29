@@ -63,7 +63,8 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.get('/management', routes.management);
+//app.get('/management', routes.management);
+app.get('/gui/*', routes.gui);
 //app.get('/users', user.list);
 app.post('/agents/*', eve.incomingFromExpress);
 

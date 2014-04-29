@@ -1,5 +1,17 @@
 extends layout
 
 block content
+  img(src='../images/logo.png')
   h1= title
   p Welcome to #{title}
+  p Open the following links and check how the events coming in from the ESB are registered by the agents. Over time, the agents learn how long it takes the worker to finish a job. This demonstrates how MIDAS can compare empirical data with the master data in ARUM. The other applications of MIDAS in ARUM, predicting NC related events and calculating KPIs, will be accomplished in a very similar manner. 
+  p (Note that the GUIs are only for demonstration of the idea and the functioning of the architecture.)
+
+
+  a(href="gui/worker/Remco") Worker Remco
+  br
+  a(href="gui/worker/Giovanni") Worker Giovanni
+  br
+  a(href="gui/worker/Ludo") Worker Ludo
+
+  p The code for this demo can be found at #[a(href="https://github.com/RemcoTukker/MIDAS-Agents") Github]

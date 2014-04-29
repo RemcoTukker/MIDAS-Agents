@@ -25,7 +25,7 @@ function AgentBase(myAgent) {
 
 		// create a new object with as prototype the user defined object
 		// alternatives are constructor functions that provide a deep copy, returns the object itself, 
-		// or perhaps even sets an arbitrary prototype. Also its possible to write a constructor functions yourself
+		// or perhaps even sets an arbitrary prototype. Also its possible to write a constructor function yourself
 		var newAgent = Object.create(myAgent);
 
 		// TODO set the constructor?
@@ -36,11 +36,8 @@ function AgentBase(myAgent) {
 		//let the user defined stuff happen! TODO: check if it exists
 		newAgent.init();
 
-
 		return newAgent;
 	}
-
-
 
 }
 

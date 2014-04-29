@@ -1,0 +1,29 @@
+//   Created by Alex on 1/30/14.
+
+doctype html
+html
+    head
+        script.
+            agentName="#{agent}"
+        title.
+            Agent GUI Demo
+        link(href="../../stylesheets/style.css", rel='stylesheet', type="text/css")
+        script(type='text/javascript', src='../../javascripts/vis.min.js')
+        link(href="../../stylesheets/vis.css", rel='stylesheet', type="text/css")
+        script(type='text/javascript', src='../../javascripts/gui.js')
+
+    body
+        img(src='../../images/logo.png')
+        h1.
+            Worker GUI for #{agent}
+        div(id='agentStatus')
+            span(id='agentStatusSpan').
+                Agent status: connecting..
+        div(id="agentControls")
+            h2.
+                Controls
+            span(id='commandStatus')
+
+        div(id="visualization")
+
+

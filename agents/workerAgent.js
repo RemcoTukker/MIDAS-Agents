@@ -6,22 +6,22 @@
 
 */
 
-var myAgent = {
-	RPCfunctions: {},
-	
-	working: false,
-	timeout: null,
-	startTime: null,
-	expectedTime: null, //TODO set sane defaults here (?)
-	minTime: null,
-	maxTime: null,
-	timelineId: 0,
-	timeline: [] // schedule format: array of {id:i, content:task, start:date.getTime(), end:date2.getTime()} objects
-
+var myAgent = {   // this stuff sits in the prototype, shared between agents instantiated from this file
+	RPCfunctions: {}
 };
 
 
-myAgent.init = function() {
+myAgent.init = function() { // this is stuff that is specific to the agent
+
+	this.working = false;
+	this.timeout = null;
+	this.startTime = null;
+	this.expectedTime = null; //TODO set sane defaults here (?)
+	this.minTime = null;
+	this.maxTime = null;
+	this.timelineId = 0;
+	this.timeline = []; // schedule format: array of {id:i, content:task, start:date.getTime(), end:date2.getTime()} objects
+	
 
 	this.registerAddressForRPCs('http', "agents/" + this.agentName);  
 
@@ -78,15 +78,15 @@ myAgent.RPCfunctions.processEvent = function(params, callback) {
 			var that = this;
 			this.timeout = setTimeout( function() { 
 				var now = new Date();
-				that.send("local://esbProxy", {method:"generateEvent", id:0, params: {type: "delayedJob", worker: that.agentName, timestamp: now.getDate()} }, 
+				that.send("local://esbProxy", {method:"generateEvent", id:0, params: {type: "delayedJob", worker: that.agentName, timestamp: now.getTime()} }, 
 						function(answer){ console.log(answer); }); //dont have to do anything with the answer... 
 				// add event to timeline		
-				that.timeline.push({id:that.timelineId, content:"jobDelayed", start: now.getDate()});
+				that.timeline.push({id:that.timelineId, content:"jobDelayed", start: now.getTime()});
 				that.timelineId++;
 			}, this.maxTime * 1000);
 		}
 
-		this.timeline.push({id:this.timelineId, content:"jobStarted", start: this.startTime.getDate()});
+		this.timeline.push({id:this.timelineId, content:"jobStarted", start: this.startTime.getTime()});
 		this.timelineId++;
 
 		callback({result:"confirmed"});
@@ -108,7 +108,7 @@ myAgent.RPCfunctions.processEvent = function(params, callback) {
 		for (var i = 1; i <= this.timeline.length; i++) {
 			if (this.timeline[this.timeline.length - i].content == "jobStarted") {
 				this.timeline[this.timeline.length - i].content = "job";
-				this.timeline[this.timeline.length - i].end = now.getDate();
+				this.timeline[this.timeline.length - i].end = now.getTime();
 				console.log("job in timeline converted to period");
 				break;
 			}
@@ -116,13 +116,18 @@ myAgent.RPCfunctions.processEvent = function(params, callback) {
 		
 		if (duration / 1000 < this.minTime) {
 		//	generate warning event 
-			this.send("local://esbProxy", {method:"generateEvent", id:0, params: {type: "briefJob", worker: this.agentName, timestamp: now.getDate()} }, 
+			this.send("local://esbProxy", {method:"generateEvent", id:0, params: {type: "briefJob", worker: this.agentName, timestamp: now.getTime()} }, 
 					function(answer){ console.log(answer); }); //dont have to do anything with the answer... 
 		// add event to timeline	
-			this.timeline.push({id:this.timelineId, content:"briefJob", start: now.getDate()});
+			this.timeline.push({id:this.timelineId, content:"briefJob", start: now.getTime()});
 			this.timelineId++;
 		}
 		
+		// clean up the timeline if it becomes too long
+		if (this.timeline.length > 100) {
+			this.timeline.shift(); //just remove first element
+		}
+
 
 		// let the learning modules know something happened
 		this.learningModule.WriteDuration(duration / 1000); // in seconds
