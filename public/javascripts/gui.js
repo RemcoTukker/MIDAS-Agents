@@ -87,18 +87,29 @@ window.onload = function() {
 
   function getScheduleData() {
     askAgent(agentUrl + agentName, "getHistory", {}, function(response) {
-		console.log(response);      
+		//console.log(response);      
 
 		var receivedMsg = JSON.parse(response);
 		jobs = receivedMsg.result;
-		timeline.setItems(receivedMsg.result);
 
+		for (var x = 0; x < jobs.length; x++) {
+			if (typeof jobs[x].end === 'undefined') {
+				if (jobs[x].content == "jobStarted" ) {
+					jobs[x].className = "inProgress";
+				} else {
+					jobs[x].className = "warning";
+				}
+			}
+		}
+
+		timeline.setItems(jobs);
+		plotHistogram();
     });
   }
 
   function getStatus() {
     askAgent(agentUrl + agentName, "getState", {}, function(response) {
-		console.log(response);      
+		//console.log(response);      
 		
 		var receivedMsg = JSON.parse(response);
 		var controlDiv = document.getElementById("agentControls");
@@ -110,30 +121,29 @@ window.onload = function() {
 			"<br> Minimal Expected Duration: " + minTime + 
 			"<br> Maximal Expected Duration: " + maxTime + "<br>"; 
 
-
+		plotHistogram();
     });
   }
 
   function plotHistogram() {
-	//TODO load data (while getting rid of events)
+	//load data (while getting rid of events)
 	var d3array = [];
 	for (var x = 0; x < jobs.length; x++) {
 		if (typeof jobs[x].end != undefined) {
 			d3array.push((jobs[x].end - jobs[x].start) / 1000);
 		}
 	}
-
+	var values = d3array;
 
 	// Generate a Bates distribution of 10 random variables.
 	//var values = d3.range(1000).map(d3.random.bates(10));
-	var values = d3array;
 
 	// A formatter for counts.
 	var formatCount = d3.format(",.0f");
 
 	var margin = {top: 10, right: 30, bottom: 30, left: 30},
 		width = 960 - margin.left - margin.right,
-		height = 500 - margin.top - margin.bottom;
+		height = 300 - margin.top - margin.bottom;
 
 	var x = d3.scale.linear()
 		.domain([0, 90])
@@ -183,7 +193,7 @@ window.onload = function() {
 		.attr("transform", "translate(0," + height + ")")
 		.call(xAxis);
 
-	var minLine = svg.append("svg:line")
+	var minLine = svg.append("svg:line") //adding the lines that give mean and mean +/- x * variance  (with x 1.3 or 2 i believe..)
 	    .attr("x1", x(minTime))
 	    .attr("y1", 0)
 	    .attr("x2", x(minTime))
@@ -214,23 +224,35 @@ window.onload = function() {
   function addButton() {
 
 	var histDiv = document.getElementById("histogramButton");
-    var button1  = "<input type='button' value='Plot Histogram', id='b1'>";
-    histDiv.innerHTML = button1;
+    //var button1  = "<input type='button' value='Plot Histogram', id='b1'>";
+    //histDiv.innerHTML = button1;
+	//var buttons = "<input type='button' value='Plot Histogram', id='b1'> <input type='button' value='Reset Learning', id='b2'>"
+	var buttons = "<input type='button' value='Reset Learning', id='b2'>"
 
-	var b1 = document.getElementById('b1');
+	histDiv.innerHTML = buttons;
 
-	b1.onclick = function() {
+	//var b1 = document.getElementById('b1');
+	var b2 = document.getElementById('b2');
 
-		plotHistogram();
-
+	//b1.onclick = function() {
+	//	plotHistogram();
+	//}
+	b2.onclick = function() {
+		askAgent(agentUrl + agentName, "reset", {}, function(response) {
+			console.log(response);
+			//update data as well:
+			getStatus();
+			plotHistogram();      
+		});
 	}
+
   }
 
 
   // get History on start.
   getScheduleData();
   getStatus();
-
+  plotHistogram();
   addButton();
 
   // recheck the agent for new information

@@ -150,8 +150,7 @@ myAgent.RPCfunctions.getHistory = function(params, callback) {
 
 myAgent.RPCfunctions.reset = function(params, callback) {
     
-	//TODO this doesnt work, because we still have the old AIM module where the data resides.. 
-	//have to make a reset function in there too then
+	this.learningModule.WriteControl(1);  // 1 is the reset control signal 
 
 	this.expectedTime = null;
 	this.minTime = null;

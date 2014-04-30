@@ -74,7 +74,7 @@ http.createServer(app).listen(app.get('port'), function(){
 
 
 
-///////////////         testing code
+///////////////         testing code, to be replaced by ESB service
 
 // generating event messages in lieu of the esb service for testing purposes
 var randgen = require('randgen');
