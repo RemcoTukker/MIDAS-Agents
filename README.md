@@ -14,7 +14,7 @@ Install the required external software, git, nodejs and omniorb:
 	rpm --import https://fedoraproject.org/static/0608B895.txt
 	rpm -Uvh http://download-i2.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
 	yum install nodejs npm --enablerepo=epel
-	yum install omniORB omniORB-devel --enablerepo=epely
+	yum install omniORB omniORB-devel --enablerepo=epel
 	yum install git
 	exit
 
@@ -62,7 +62,7 @@ Deploying learning modules to MIDAS agents (will make a script for this later)
 
 Do the same as on CentOS, but:
 - Use sudo instead of the horrible su / exit
-- Replace yum by apt-get
+- Replace yum by apt-get (and forget about the rpm / epel stuff)
 - Replace omniORB by omniidl (no devel packages needed)
 
 ## Enjoy!
