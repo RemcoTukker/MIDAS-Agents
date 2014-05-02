@@ -22,10 +22,10 @@ function Learning(eve, options, addServiceFunction) {
 	
 	//load the modules that are noted in options; alternative is to monitor some directory?
 	//TODO load the learning modules specified in the options
-
+/*
 	var nodeModule = require('./EveModule/EveModule');
 	modules['EveModule'] = {ctor: nodeModule.EveModule, count: 0};
-
+*/
 	var nodeModule2 = require('./MeanAndVarianceModule');
 	modules['MeanAndVarianceModule'] = {ctor: nodeModule2.MeanAndVarianceModule, count: 0};
 
