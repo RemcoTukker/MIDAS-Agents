@@ -8,20 +8,17 @@ Note that this relies on eve-nodejs, which is currently linked in with npm-link 
 
 ## Deployment on ARUM CentOS Image
 
-Install Nodejs
+Install the required external software, git, nodejs and omniorb:
 
 	su
 	rpm --import https://fedoraproject.org/static/0608B895.txt
 	rpm -Uvh http://download-i2.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
 	yum install nodejs npm --enablerepo=epel
-	exit
-
-Install MIDAS learning modules
-
-	su
 	yum install omniORB omniORB-devel --enablerepo=epely
 	yum install git
 	exit
+
+Download and install the tools for building the learning modules
 
 	mkdir ~/MIDASdeployment
 	cd ~/MIDASdeployment
@@ -34,6 +31,8 @@ Install MIDAS learning modules
 	mkdir ~/MIDASdeployment/aim_workspace
 	export AIM_WORKSPACE=$HOME/MIDASdeployment/aim_workspace
 	echo "export AIM_WORKSPACE=$AIM_WORKSPACE" >> $HOME/.bashrc
+
+Download MIDAS learning modules
 
 	aimget learningModules https://github.com/RemcoTukker/MIDAS-Learning-Modules
 	cd $AIM_WORKSPACE/learningModules
@@ -62,13 +61,17 @@ Deploying learning modules to MIDAS agents (will make a script for this later)
 ## Deployment to Ubuntu/Debian
 
 Do the same as on CentOS, but:
--Use sudo instead of the horrible su / exit
--Replace yum by apt-get
--Replace omniORB by omniidl (no devel packages needed)
+- Use sudo instead of the horrible su / exit
+- Replace yum by apt-get
+- Replace omniORB by omniidl (no devel packages needed)
 
 ## Enjoy!
 
 	cd ~/MIDASdeployment/MIDAS-agents
 	node MIDAS-agents.js
 
-open browser and go to http://localhost:3000/
+Open browser and go to [http://localhost:3000/](http://localhost:3000/) for a demo of MIDAS agents learning their job length. As soon as the ESB service is available, they will learn this from ESB events.
+
+## So, where's the link with the ESB?
+
+The ESB service that connects to the MIDAS agents (over http using JSON RPC) still needs some polishing, will be released soon as well :-)
