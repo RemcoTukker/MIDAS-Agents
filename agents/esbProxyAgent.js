@@ -38,6 +38,20 @@ myAgent.RPCfunctions.routeEvent = function(params, callback) {
 
 };
 
+myAgent.RPCfunctions.incomingEvent = function(params, callback) {
+
+	//console.log('GOOTOTTT ITTT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+	console.log(JSON.stringify(params));
+	par = JSON.parse(params.Content);
+	console.log(JSON.stringify(par));
+	this.send("local://"+ par.worker, {method:"processEvent", id:0, params: {type: par.type, timestamp: par.timestamp} },
+		function(answer) {});
+
+	callback('OK'); //callback gives error for some reason
+
+}
+
+
 myAgent.RPCfunctions.generateEvent = function(params, callback) {
 	//function to give useful output to ARUM
 

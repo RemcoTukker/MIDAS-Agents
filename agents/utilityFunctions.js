@@ -70,7 +70,7 @@ function utilities(newAgent, agentName, filename, options, serviceFunctions ) {
 				
 				//calling a non-existing RPC gives a weird error "Cannot call method 'call' of undefined"? 
 				// -> catch it / ensure proper answer is sent
-
+				console.log(parsedRPC.method);
 				newAgent.RPCfunctions[parsedRPC.method].call(newAgent, parsedRPC.params, wrappedCallback);
 					//We need call or apply here, 'cause otherwise the RPCfunctions object will be the "this"
 					// maybe we could also use bind @on, to make this prettier

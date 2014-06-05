@@ -27,7 +27,15 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
-// app.use(express.bodyParser()); //dont really seem to need this?
+
+app.use(function(req, res, next) { //TODO: somehow make sure that eve java sets application/json as content type instead of plain text
+	if (req.method === 'POST') {
+		req.headers['content-type'] = 'application/json';   //OK, this is an exceedingly ugly hack, but should get demo to work...
+	}
+	next();
+})
+
+app.use(express.bodyParser()); //dont really seem to need this?
 app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));
 app.use(express.session());
@@ -36,6 +44,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // 
 var eveOptions = {
+	//services: { topics: {}, evep2p: {transports: {localTransport: {}, httpRequest: {} } } }, // httpRequest 
 	services: { topics: {}, evep2p: {transports: {localTransport: {}, httpRequest: {} } } }, // httpRequest 
 	//agents: {filename: "mathAgent.js" }
 	agents: {}  //currently agents at startup can only be loaded from the eve/agents directory... TODO: fix that!
@@ -62,11 +71,18 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+app.post('/agents/*', function(req,res) {
+
+	console.log(req.body);
+
+	eve.incomingFromExpress(req, res);
+});
+
 app.get('/', routes.index);
 //app.get('/management', routes.management);
 app.get('/gui/*', routes.gui);
 //app.get('/users', user.list);
-app.post('/agents/*', eve.incomingFromExpress);
+
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
@@ -104,7 +120,7 @@ function generateNewJob(worker) {
 
 }
 
-generateNewJob("Remco");
-generateNewJob("Giovanni");
-generateNewJob("Ludo");
+//generateNewJob("Remco");
+//generateNewJob("Giovanni");
+//generateNewJob("Ludo");
 
