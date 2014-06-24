@@ -70,7 +70,7 @@ Do the same as on CentOS, but:
 	cd ~/MIDASdeployment/MIDAS-agents
 	node MIDAS-agents.js
 
-Open browser and go to [http://localhost:3000/](http://localhost:3000/) for a demo of MIDAS agents learning their job length. The ESB proxy agent will wait for events that are coming in from the ESB, but not yet send events back.
+Open browser and go to [http://localhost:3000/](http://localhost:3000/) for a demo of MIDAS agents learning their job length. The ESB proxy agent will wait for events that are coming in from the ESB, but not yet send events back. If you want to generate the events locally, go into the MIDAS-agents.js file and uncomment the last three lines (generate new job for each of the workers, kickstarting 'production')
 
 ## So, where's the link with the ESB?
 
